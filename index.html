@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FUTURETRACE — Explore Your Timelines</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Noto+Sans+Devanagari:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#070812;--pu:#8B5CF6;--cy:#22D3EE;--em:#34D399;--tx:#e8e9f5;--mu:#8b8fb0;--gl:rgba(255,255,255,.04);--bd:rgba(255,255,255,.1);
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark}
+html{scroll-behavior:smooth;scroll-padding-top:70px}*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:'Space Grotesk','Noto Sans Devanagari',system-ui,sans-serif;line-height:1.55;overflow-x:hidden;
+background-image:radial-gradient(60% 40% at 15% 0%,rgba(139,92,246,.18),transparent),radial-gradient(50% 40% at 90% 30%,rgba(34,211,238,.09),transparent)}
+#fx{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+main,nav,footer{position:relative;z-index:1}
+.w{max-width:1120px;margin:0 auto;padding:0 20px}
+nav{position:sticky;top:0;backdrop-filter:blur(14px);background:rgba(7,8,18,.65);border-bottom:1px solid var(--bd);z-index:20}
+nav .w{display:flex;align-items:center;justify-content:space-between;height:60px}
+.logo{font-weight:600;letter-spacing:.28em;font-size:14px;display:flex;gap:10px;align-items:center}
+.logo i{width:10px;height:10px;border-radius:50%;background:var(--cy);box-shadow:0 0 14px var(--cy)}
+nav a,nav button{color:var(--mu);text-decoration:none;font:inherit;font-size:14px;background:none;border:0;cursor:pointer;margin-left:22px;padding:6px 2px;transition:color .2s}
+nav a:hover,nav button:hover{color:var(--tx)}
+:focus-visible{outline:2px solid var(--cy);outline-offset:3px;border-radius:6px}
+.hero{padding:clamp(60px,12vh,140px) 0 80px;text-align:center}
+.rise{opacity:0;transform:translateY(18px);animation:rise .9s cubic-bezier(.2,.7,.2,1) forwards}
+@keyframes rise{to{opacity:1;transform:none}}
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.3em;color:var(--cy);text-transform:uppercase}
+h1{font-weight:300;font-size:clamp(38px,7vw,84px);line-height:1.05;margin:18px 0;letter-spacing:-.02em}
+h1 b{font-weight:500;background:linear-gradient(90deg,var(--pu),var(--cy));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--mu);max-width:560px;margin:0 auto 40px;font-size:clamp(16px,2vw,19px)}
+.glass{background:var(--gl);border:1px solid var(--bd);border-radius:20px;backdrop-filter:blur(12px)}
+.form{max-width:760px;margin:0 auto;padding:22px;text-align:left}
+.form input[type=text]{width:100%;background:rgba(0,0,0,.3);border:1px solid var(--bd);border-radius:14px;color:var(--tx);font:inherit;font-size:clamp(16px,2.2vw,21px);padding:18px 20px;transition:border-color .2s,box-shadow .2s}
+.form input::placeholder{color:#5d6086}
+.form input:focus{outline:0;border-color:var(--pu);box-shadow:0 0 0 4px rgba(139,92,246,.2),0 0 30px rgba(139,92,246,.2)}
+.err{color:#fda4af;font-size:13px;min-height:20px;margin:8px 4px}
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.chip{background:none;border:1px solid var(--bd);color:var(--mu);border-radius:999px;padding:8px 16px;font:inherit;font-size:14px;cursor:pointer;transition:.2s}
+.chip:hover{color:var(--tx);border-color:rgba(255,255,255,.3)}
+.chip[aria-checked=true],.chip.on{color:#fff;border-color:var(--cy);background:rgba(34,211,238,.12);box-shadow:0 0 18px rgba(34,211,238,.18)}
+.btn{font:inherit;font-weight:500;border-radius:999px;padding:13px 26px;cursor:pointer;border:1px solid var(--bd);color:var(--tx);background:var(--gl);transition:transform .2s,box-shadow .2s}
+.btn:hover{transform:translateY(-2px)}
+.btn.p{border:0;background:linear-gradient(110deg,var(--pu),#6d5cf6 50%,var(--cy));background-size:200% 100%;box-shadow:0 0 28px rgba(139,92,246,.4);animation:sheen 5s linear infinite}
+.btn.p:hover{box-shadow:0 0 44px rgba(34,211,238,.45)}
+.btn.sm{padding:8px 16px;font-size:13px}
+@keyframes sheen{50%{background-position:100% 0}}
+.cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px}
+section{padding:70px 0}
+h2{font-weight:300;font-size:clamp(28px,4vw,44px);margin:0 0 8px;letter-spacing:-.01em}
+.lead{color:var(--mu);margin:0 0 30px;max-width:620px}
+.stage{padding:20px;position:relative;min-height:420px}
+.tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:12px}
+.tools h3{margin:0;font-weight:400;font-size:18px}.tools small{color:var(--mu)}
+.scroll{overflow-x:auto;max-width:100%}
+svg#tl{display:block;width:100%;min-width:680px;height:auto}
+.br{fill:none;stroke-width:2.5;stroke-linecap:round;filter:drop-shadow(0 0 6px currentColor);transition:opacity .4s}
+.dim .br,.dim .nd{opacity:.22}.dim .sel .br,.dim .sel .nd{opacity:1}
+.anim .br{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1.5s ease-out forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.nd{cursor:pointer;transition:opacity .4s}.anim .nd{opacity:0;animation:pop .6s ease-out forwards}
+@keyframes pop{from{opacity:0;transform:scale(.4)}to{opacity:1;transform:scale(1)}}
+.nd circle.c{transition:r .2s,fill .2s}.nd:hover circle.c,.nd:focus-visible circle.c{r:12}
+.nd .halo{animation:pulse 2.6s ease-in-out infinite;transform-origin:center;transform-box:fill-box;opacity:.5}
+@keyframes pulse{50%{transform:scale(1.9);opacity:0}}
+.nd text{fill:var(--mu);font-size:12px;text-anchor:middle;font-family:'Space Grotesk',sans-serif;pointer-events:none}
+.nd.on text{fill:#fff}
+.nd.on circle.c{fill:#fff}
+.lane{font-size:12px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;font-family:'Space Grotesk',sans-serif}
+.grid2{display:grid;grid-template-columns:1fr 340px;gap:18px;margin-top:18px}
+@media(max-width:900px){.grid2{grid-template-columns:1fr}}
+.panel{padding:22px}.panel .tag{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.2em;text-transform:uppercase}
+.panel h4{font-weight:400;font-size:26px;margin:6px 0 4px}
+.panel p{margin:4px 0 14px;color:#c4c7e0;font-size:15px}.panel dt{font-size:12px;color:var(--mu);letter-spacing:.12em;text-transform:uppercase}
+.bar{height:6px;background:rgba(255,255,255,.08);border-radius:9px;overflow:hidden;margin:6px 0 16px}.bar i{display:block;height:100%;border-radius:9px;transition:width .7s cubic-bezier(.2,.7,.2,1)}
+input[type=range]{width:100%;accent-color:var(--cy);height:28px}
+.ticks{display:flex;justify-content:space-between;font-size:12px;color:var(--mu)}
+.fade{animation:fade .45s ease}@keyframes fade{from{opacity:0;transform:translateY(8px)}}
+.dec{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:6px}
+.dec button{text-align:left;padding:16px;border-radius:16px;background:var(--gl);border:1px solid var(--bd);color:var(--tx);font:inherit;cursor:pointer;transition:.25s}
+.dec button:hover{transform:translateY(-3px);border-color:rgba(255,255,255,.28)}
+.dec button[aria-pressed=true]{border-color:var(--pu);box-shadow:0 0 26px rgba(139,92,246,.3);background:rgba(139,92,246,.1)}
+.dec b{display:block;font-weight:500}.dec span{font-size:13px;color:var(--mu)}
+.empty{display:grid;place-items:center;text-align:center;min-height:340px;color:var(--mu)}
+.empty svg{opacity:.5;margin-bottom:10px}
+.load{position:absolute;inset:0;display:none;place-items:center;text-align:center;background:rgba(7,8,18,.88);border-radius:20px;z-index:5}
+.load.on{display:grid}
+.ring{width:96px;height:96px;border-radius:50%;margin:0 auto 20px;border:2px solid transparent;border-top-color:var(--cy);border-right-color:var(--pu);animation:spin 1.1s linear infinite;box-shadow:0 0 30px rgba(34,211,238,.25)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.saved{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.card{padding:18px;display:flex;flex-direction:column;gap:8px;transition:transform .25s,border-color .25s}.card:hover{transform:translateY(-3px);border-color:rgba(255,255,255,.25)}
+.card h5{margin:0;font-weight:500;font-size:17px;word-break:break-word}.card small{color:var(--mu)}
+.card input{background:rgba(0,0,0,.3);border:1px solid var(--pu);color:var(--tx);border-radius:8px;padding:6px 10px;font:inherit}
+.share{display:grid;grid-template-columns:minmax(0,420px) 1fr;gap:28px;align-items:center}
+@media(max-width:800px){.share{grid-template-columns:1fr}}
+canvas#card{width:100%;height:auto;border-radius:20px;border:1px solid var(--bd);box-shadow:0 0 60px rgba(139,92,246,.2)}
+footer{border-top:1px solid var(--bd);padding:48px 0 60px;color:var(--mu);font-size:14px}
+footer .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:30px}footer h6{color:var(--tx);font-size:13px;letter-spacing:.2em;margin:0 0 8px;text-transform:uppercase;font-weight:500}
+dialog{background:#0d0e20;color:var(--tx);border:1px solid var(--bd);border-radius:20px;padding:26px;max-width:380px;width:90%}dialog::backdrop{background:rgba(0,0,0,.6)}
+label.t{display:flex;justify-content:space-between;align-items:center;margin:12px 0}
+#toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,30px);background:#14152b;border:1px solid var(--bd);padding:10px 18px;border-radius:12px;opacity:0;transition:.3s;z-index:50;pointer-events:none}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+@media(max-width:600px){nav a,nav button{margin-left:12px;font-size:13px}.logo{letter-spacing:.14em;font-size:12px}}
+nav select{background:rgba(255,255,255,.05);color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:5px 8px;font:inherit;font-size:13px}nav select option{background:#0d0e20}
+html:not(:lang(en)) .eyebrow,html:not(:lang(en)) .tag,html:not(:lang(en)) .lane,html:not(:lang(en)) dt,html:not(:lang(en)) .logo{letter-spacing:0;text-transform:none}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+body.rm *,body.rm *::before,body.rm *::after{animation-duration:.01ms!important;animation-delay:0s!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+</style>
+</head>
+<body>
+<canvas id="fx" aria-hidden="true"></canvas>
+<nav><div class="w"><div class="logo"><i></i>FUTURETRACE</div>
+<div><select id="lang" aria-label="Language"><option value="en">English</option><option value="hi">हिन्दी</option><option value="mr">मराठी</option></select><a href="#explore">Explore</a><a href="#saved">Saved Timelines</a><button id="openSet">Settings</button></div></div></nav>
+<main>
+<header class="hero"><div class="w">
+<div class="eyebrow rise" style="animation-delay:.1s">Explore Your Timelines</div>
+<h1 class="rise" style="animation-delay:.3s">Your future isn’t <b>written yet.</b></h1>
+<p class="sub rise" style="animation-delay:.55s">Explore the paths you could take. Discover how small decisions can create different possibilities.</p>
+<form id="f" class="form glass rise" style="animation-delay:.8s" novalidate>
+<label for="goal" class="eyebrow" style="font-size:11px">What do you want to explore?</label>
+<input id="goal" type="text" maxlength="140" autocomplete="off" placeholder="What if I learn web development in 365 days?" aria-describedby="err" style="margin-top:10px">
+<div id="err" class="err" role="alert"></div>
+<div class="row"><div class="seg" role="radiogroup" aria-label="Duration" id="durs"></div>
+<div class="cta"><button class="btn" type="button" id="ex">View Example Timeline</button><button class="btn p" type="submit">Explore My Future</button></div></div>
+</form></div></header>
+
+<section id="explore"><div class="w">
+<h2>Timeline explorer</h2><p class="lead">Three illustrative scenarios branch from today. Select a path or a milestone, or drag the slider to travel through time.</p>
+<div class="glass stage" id="stage">
+<div class="load" id="load" role="status" aria-live="polite"><div><div class="ring"></div><div id="lmsg" class="eyebrow">Initializing simulation</div></div></div>
+<div id="empty" class="empty"><div><svg width="64" height="64" viewBox="0 0 64 64" fill="none" stroke="#22D3EE" stroke-width="1.5"><circle cx="10" cy="32" r="4"/><path d="M14 32C30 32 30 12 54 12M14 32h40M14 32c16 0 16 20 40 20"/></svg><p>No timeline yet. Enter a goal above, or try the example.</p></div></div>
+<div id="tlwrap" hidden>
+<div class="tools"><div><h3 id="tt"></h3><small id="ts"></small></div><div style="display:flex;gap:8px"><button class="btn sm" id="save">Save timeline</button><button class="btn sm" id="toShare">Result card</button></div></div>
+<div class="scroll"><svg id="tl" viewBox="0 0 1000 520" role="group" aria-label="Branching timeline"></svg></div>
+<div style="margin-top:8px"><label for="sl" class="ticks" style="justify-content:flex-start;gap:8px">Timeline position — <span id="slv"></span></label>
+<input id="sl" type="range" min="0" max="4" step="1" value="0"><div class="ticks" id="tk"></div></div>
+<div class="grid2"><div><div class="eyebrow" style="font-size:11px;margin-bottom:8px">Decision simulator</div><div class="dec" id="dec"></div></div>
+<aside class="glass panel" id="panel" aria-live="polite"></aside></div>
+</div></div></div></section>
+
+<section id="saved"><div class="w"><h2>Saved timelines</h2><p class="lead">Stored privately in this browser. No account needed.</p><div class="saved" id="sv"></div></div></section>
+
+<section id="share"><div class="w"><h2>Shareable result</h2><p class="lead">A card with your goal, chosen path, and key milestones.</p>
+<div class="share"><canvas id="card" width="1080" height="1080" aria-label="Result card preview"></canvas>
+<div><p id="shnote" class="lead">Generate a timeline to create your card.</p><div class="cta"><button class="btn p" id="dl">Download PNG</button><button class="btn" id="sh">Share</button></div></div></div></div></section>
+</main>
+<footer><div class="w"><div class="cols">
+<div><h6>FUTURETRACE</h6>A small project for imagining how habits and decisions compound over time.</div>
+<div><h6>How scenarios work</h6>Your goal is matched to a template (learning, fitness, business, creative or general). Duration sets the milestone dates; your chosen decision adjusts pace and progress on every path. Nothing is sent anywhere.</div>
+<div><h6>Disclaimer</h6>All outcomes are hypothetical, illustrative scenarios — not predictions or guarantees.</div></div></div></footer>
+
+<dialog id="set"><h3 style="margin-top:0;font-weight:400">Settings</h3>
+<label class="t">Reduce motion<input type="checkbox" id="sRM"></label>
+<label class="t">Ambient particles<input type="checkbox" id="sPT" checked></label>
+<button class="btn sm" id="clr">Clear all saved timelines</button>
+<div class="cta" style="margin-top:18px"><button class="btn p sm" id="cl">Done</button></div></dialog>
+<div id="toast" role="status"></div>
+
+<script>
+const $=s=>document.querySelector(s),KEY='futuretrace.saved';
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const S={lang:'en',dur:90,rm:false,pt:true,cur:null,path:0,idx:0,editing:null,anim:false};
+const LANES=[{get n(){return tr('The Consistent Path')},c:'#34D399',y:110},{get n(){return tr('The Distracted Path')},c:'#8B5CF6',y:260},{get n(){return tr('The Unexpected Path')},c:'#22D3EE',y:410}];
+const CATS=[
+{k:'Learning',re:/learn|study|code|coding|web|language|skill|course|python|guitar|piano|exam|read/i,st:['Foundations','First Real Project','The Plateau','Depth & Feedback','Proof of Skill']},
+{k:'Fitness',re:/run|fit|weight|gym|health|marathon|workout|lose|muscle|yoga|sleep|swim/i,st:['Habit Setup','Early Strength','The Plateau','Visible Change','New Baseline']},
+{k:'Business',re:/business|startup|launch|sell|product|company|freelanc|app|brand|customer|income|side hustle/i,st:['Validation','First Prototype','First Customers','Pivot or Scale','Sustainable Rhythm']},
+{k:'Creative',re:/write|book|novel|music|art|draw|paint|film|song|design|album|podcast|photo/i,st:['Spark & Sketch','First Draft','The Messy Middle','Revision & Voice','Share It']},
+{k:'General',re:/./,st:['Foundations','First Win','The Plateau','Breakthrough','Integration']}];
+const T={
+c:{t:null,d:['Small daily sessions turn the goal into a routine.','You ship something real and learn from it.','Progress slows, but the habit carries you through.','Feedback sharpens your approach and confidence.','You can point to tangible proof of progress.'],
+ch:['Keeping sessions small enough to repeat.','Resisting the urge to over-plan.','Boredom when gains feel invisible.','Hearing honest critique.','Deciding what comes next.'],
+ac:['Pick a fixed daily slot.','Finish something imperfect.','Track one tiny metric.','Ask one person for feedback.','Write down what you learned.'],f:[.1,.3,.55,.78,1],p:[18,40,58,80,96]},
+d:{t:['Slow Start','Stop-Start Rhythm','The Stall','Restart Attempt','Partial Result'],d:['Enthusiasm is high but the plan is vague.','Busy weeks break the rhythm; momentum flickers.','Progress stalls and doubt creeps in.','A fresh push recovers some lost ground.','You reach a partial result with clear lessons.'],
+ch:['No clear first step.','Skipped days compound.','Comparing yourself to others.','Rebuilding the routine.','Accepting an imperfect outcome.'],ac:['Define a 10-minute first step.','Set a minimum viable day.','Reduce the goal, keep the streak.','Schedule a weekly review.','Plan a smaller follow-up goal.'],f:[.12,.32,.55,.8,1],p:[10,22,30,45,58]},
+u:{t:['Foundations, Reframed','A Surprise Opening','The Detour','New Direction Clicks','Unexpected Outcome'],d:['An early insight reframes what you are really after.','A chance encounter or idea opens a side door.','Following it costs time and some original progress.','The new direction fits you better than the plan did.','You land somewhere you hadn’t imagined.'],
+ch:['Letting go of the original plan.','Telling signal from distraction.','Short-term loss of momentum.','Committing to the change.','Explaining the new path to others.'],ac:['Note what energises you.','Say yes to one small experiment.','Timebox the detour.','Choose a single new focus.','Share your story.'],f:[.1,.35,.6,.8,1],p:[12,35,40,72,90]}};
+const D={base:{n:'Keep current approach',s:'No change to pace.',dp:[0,0,0],df:1,note:'Baseline: nothing about your approach changes.'},
+practice:{n:'Practice consistently',s:'Show up on most days.',dp:[8,14,10],df:.9,note:'Consistent practice pulls milestones earlier and lifts progress on every path.'},
+breaks:{n:'Take occasional breaks',s:'Plan deliberate rest.',dp:[-4,5,2],df:1.08,note:'Planned rest slows the fastest path slightly but protects against burnout.'},
+pivot:{n:'Change learning direction',s:'Switch focus mid-way.',dp:[4,3,10],df:1.04,note:'A change of direction dips progress mid-way, then pays off — most on the unexpected path.'}};
+const clean=g=>g.replace(/^what if i\s+/i,'').replace(/[?.!\s]+$/,'');
+function gen(goal,dur,dec){const cat=CATS.find(c=>c.re.test(goal)),dd=D[dec];
+return{goal,dur,dec,cat:tr(cat.k),paths:['c','d','u'].map((k,pi)=>{const t=T[k];return{ms:[0,1,2,3,4].map(i=>{let p=t.p[i]+(dd.dp[pi]*(i+1)/5);if(dec==='pivot'&&(i===1||i===2))p-=12;
+return{title:tr(t.t?t.t[i]:cat.st[i]),day:Math.max(1,Math.round(dur*t.f[i]*dd.df)),prog:Math.max(5,Math.min(99,Math.round(p))),desc:tr(t.d[i]),ch:tr(t.ch[i]),ac:tr(t.ac[i]),stage:cat.st[i]}})}})}}
+function validate(v){v=v.trim();if(!v)return'Tell us what you want to explore.';if(v.length<6)return'Add a little more detail (at least 6 characters).';if(!/[a-z\u00C0-\u024F\u0400-\u04FF\u0900-\u097F]{3,}/i.test(v))return'Please describe your goal with words.';return''}
+const toast=m=>{const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('on'),2400)};
+const rm=()=>S.rm||matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* i18n: English text is the key; [hindi, marathi]. Missing keys fall back to English. */
+const X={'Explore':['खोजें','शोधा'],'Saved Timelines':['सहेजी टाइमलाइन','जतन केलेल्या टाइमलाइन'],'Settings':['सेटिंग्स','सेटिंग्ज'],'Explore Your Timelines':['अपनी टाइमलाइन खोजें','तुमच्या टाइमलाइन शोधा'],'Your future isn’t':['आपका भविष्य अभी','तुमचे भविष्य अजून'],'written yet.':['लिखा नहीं गया है।','लिहिलेले नाही.'],
+'Explore the paths you could take. Discover how small decisions can create different possibilities.':['आप जो रास्ते चुन सकते हैं, उन्हें खोजें। देखें कि छोटे फैसले कैसे अलग-अलग संभावनाएँ बनाते हैं।','तुम्ही निवडू शकता ते मार्ग शोधा. छोटे निर्णय कशा वेगवेगळ्या शक्यता निर्माण करतात ते पहा.'],
+'What do you want to explore?':['आप क्या खोजना चाहते हैं?','तुम्हाला काय शोधायचे आहे?'],'What if I learn web development in 365 days?':['अगर मैं 365 दिनों में वेब डेवलपमेंट सीख लूँ तो?','मी ३६५ दिवसांत वेब डेव्हलपमेंट शिकलो तर?'],'View Example Timeline':['उदाहरण टाइमलाइन देखें','उदाहरण टाइमलाइन पहा'],'Explore My Future':['मेरा भविष्य खोजें','माझे भविष्य शोधा'],
+'days':['दिन','दिवस'],'DAYS':['दिन','दिवस'],'Day':['दिन','दिवस'],'GOAL':['लक्ष्य','ध्येय'],'Timeline explorer':['टाइमलाइन एक्सप्लोरर','टाइमलाइन एक्सप्लोरर'],'Save timeline':['टाइमलाइन सहेजें','टाइमलाइन जतन करा'],'Result card':['परिणाम कार्ड','निकाल कार्ड'],'Timeline position —':['टाइमलाइन स्थिति —','टाइमलाइन स्थान —'],
+'Decision simulator':['निर्णय सिम्युलेटर','निर्णय सिम्युलेटर'],'Saved timelines':['सहेजी गई टाइमलाइन','जतन केलेल्या टाइमलाइन'],'Shareable result':['साझा करने योग्य परिणाम','शेअर करण्यायोग्य निकाल'],'Download PNG':['PNG डाउनलोड करें','PNG डाउनलोड करा'],'Share':['साझा करें','शेअर करा'],'Today':['आज','आज'],
+'Possible outcome':['संभावित परिणाम','संभाव्य निकाल'],'Challenge':['चुनौती','आव्हान'],'Recommended action':['सुझाया गया कदम','सुचवलेली कृती'],'Decision effect':['निर्णय का असर','निर्णयाचा परिणाम'],'Open':['खोलें','उघडा'],'Rename':['नाम बदलें','नाव बदला'],'Delete':['हटाएँ','हटवा'],'Save name':['नाम सहेजें','नाव जतन करा'],'Done':['हो गया','झाले'],
+'Reduce motion':['कम एनिमेशन','कमी अॅनिमेशन'],'Ambient particles':['पृष्ठभूमि कण','पार्श्वभूमी कण'],'Clear all saved timelines':['सभी सहेजी टाइमलाइन हटाएँ','सर्व जतन केलेल्या टाइमलाइन हटवा'],'Disclaimer':['अस्वीकरण','अस्वीकरण'],'How scenarios work':['परिदृश्य कैसे काम करते हैं','परिस्थिती कशा काम करतात'],
+'All outcomes are hypothetical, illustrative scenarios — not predictions or guarantees.':['सभी परिणाम काल्पनिक और उदाहरण मात्र हैं — भविष्यवाणी या गारंटी नहीं।','सर्व निकाल काल्पनिक व उदाहरणात्मक आहेत — भाकीत किंवा हमी नाही.'],
+'No timeline yet. Enter a goal above, or try the example.':['अभी कोई टाइमलाइन नहीं। ऊपर लक्ष्य लिखें या उदाहरण आज़माएँ।','अजून टाइमलाइन नाही. वर ध्येय लिहा किंवा उदाहरण वापरून पहा.'],
+'Initializing simulation':['सिमुलेशन शुरू हो रहा है','सिम्युलेशन सुरू होत आहे'],'Mapping possible timelines':['संभावित टाइमलाइन बन रही हैं','संभाव्य टाइमलाइन तयार होत आहेत'],'Weighing small decisions':['छोटे फैसलों का आकलन','लहान निर्णयांचे मूल्यमापन'],'Branching futures':['भविष्य की शाखाएँ बन रही हैं','भविष्याच्या शाखा तयार होत आहेत'],
+'Tell us what you want to explore.':['बताइए आप क्या खोजना चाहते हैं।','तुम्हाला काय शोधायचे ते सांगा.'],'Add a little more detail (at least 6 characters).':['थोड़ा और विवरण जोड़ें (कम से कम 6 अक्षर)।','थोडे अधिक तपशील जोडा (किमान ६ अक्षरे).'],'Please describe your goal with words.':['कृपया अपना लक्ष्य शब्दों में लिखें।','कृपया तुमचे ध्येय शब्दांत लिहा.'],
+'Timeline saved':['टाइमलाइन सहेजी गई','टाइमलाइन जतन केली'],'Timeline updated':['टाइमलाइन अपडेट हुई','टाइमलाइन अपडेट झाली'],'Timeline deleted':['टाइमलाइन हटाई गई','टाइमलाइन हटवली'],'Generate a timeline first':['पहले टाइमलाइन बनाएँ','आधी टाइमलाइन तयार करा'],'Scenarios updated':['परिदृश्य अपडेट हुए','परिस्थिती अपडेट झाल्या'],
+'Keep current approach':['मौजूदा तरीका जारी रखें','सध्याची पद्धत सुरू ठेवा'],'No change to pace.':['गति में कोई बदलाव नहीं।','गतीत बदल नाही.'],'Practice consistently':['नियमित अभ्यास करें','सातत्याने सराव करा'],'Show up on most days.':['ज़्यादातर दिन अभ्यास करें।','बहुतेक दिवशी सराव करा.'],'Take occasional breaks':['बीच-बीच में विराम लें','अधूनमधून विश्रांती घ्या'],'Plan deliberate rest.':['आराम की योजना बनाएँ।','विश्रांतीचे नियोजन करा.'],'Change learning direction':['सीखने की दिशा बदलें','शिकण्याची दिशा बदला'],'Switch focus mid-way.':['बीच में फोकस बदलें।','मध्येच लक्ष बदला.'],
+'Baseline: nothing about your approach changes.':['आधार स्थिति: आपके तरीके में कोई बदलाव नहीं।','मूळ स्थिती: तुमच्या पद्धतीत बदल नाही.'],'Consistent practice pulls milestones earlier and lifts progress on every path.':['नियमित अभ्यास से पड़ाव जल्दी आते हैं और हर राह पर प्रगति बढ़ती है।','सातत्यपूर्ण सरावाने टप्पे लवकर येतात आणि प्रत्येक मार्गावर प्रगती वाढते.'],'Planned rest slows the fastest path slightly but protects against burnout.':['योजनाबद्ध आराम सबसे तेज़ राह को थोड़ा धीमा करता है, पर थकान से बचाता है।','नियोजित विश्रांतीने सर्वात वेगवान मार्ग थोडा मंदावतो, पण थकव्यापासून वाचवतो.'],'A change of direction dips progress mid-way, then pays off — most on the unexpected path.':['दिशा बदलने से बीच में प्रगति घटती है, फिर फायदा मिलता है — सबसे ज़्यादा अप्रत्याशित राह पर।','दिशा बदलल्याने मध्येच प्रगती घटते, मग फायदा होतो — विशेषतः अनपेक्षित मार्गावर.'],
+'The Consistent Path':['निरंतर राह','सातत्याचा मार्ग'],'The Distracted Path':['भटकी हुई राह','विचलित मार्ग'],'The Unexpected Path':['अप्रत्याशित राह','अनपेक्षित मार्ग'],'Learning':['सीखना','शिकणे'],'Fitness':['फिटनेस','फिटनेस'],'Business':['व्यवसाय','व्यवसाय'],'Creative':['रचनात्मक','सर्जनशील'],'General':['सामान्य','सामान्य'],
+'Slow Start':['धीमी शुरुआत','संथ सुरुवात'],'Stop-Start Rhythm':['रुकती-चलती लय','थांबत-चालत लय'],'The Stall':['ठहराव','थांबा'],'Restart Attempt':['दोबारा कोशिश','पुन्हा प्रयत्न'],'Partial Result':['आंशिक परिणाम','अंशतः निकाल'],'Foundations, Reframed':['नींव, नए नज़रिये से','पाया, नव्या दृष्टीने'],'A Surprise Opening':['अचानक मिला अवसर','अनपेक्षित संधी'],'The Detour':['मोड़','वळसा'],'New Direction Clicks':['नई दिशा जँच गई','नवी दिशा पटली'],'Unexpected Outcome':['अनपेक्षित नतीजा','अनपेक्षित निकाल'],
+'Foundations':['बुनियाद','पाया'],'First Real Project':['पहला असली प्रोजेक्ट','पहिला खरा प्रोजेक्ट'],'The Plateau':['स्थिरता का दौर','स्थिरतेचा टप्पा'],'Depth & Feedback':['गहराई और फीडबैक','सखोलता आणि अभिप्राय'],'Proof of Skill':['कौशल का प्रमाण','कौशल्याचा पुरावा'],'Habit Setup':['आदत बनाना','सवय लावणे'],'Early Strength':['शुरुआती ताकत','सुरुवातीची ताकद'],'Visible Change':['दिखता बदलाव','दिसणारा बदल'],'New Baseline':['नया आधार स्तर','नवी पायाभूत पातळी'],'Validation':['जाँच-परख','पडताळणी'],'First Prototype':['पहला प्रोटोटाइप','पहिला प्रोटोटाइप'],'First Customers':['पहले ग्राहक','पहिले ग्राहक'],'Pivot or Scale':['बदलाव या विस्तार','बदल किंवा विस्तार'],'Sustainable Rhythm':['टिकाऊ लय','टिकाऊ लय'],'Spark & Sketch':['चिंगारी और खाका','ठिणगी आणि आराखडा'],'First Draft':['पहला मसौदा','पहिला मसुदा'],'The Messy Middle':['उलझा हुआ बीच का दौर','गोंधळाचा मधला टप्पा'],'Revision & Voice':['संशोधन और अपनी आवाज़','सुधारणा आणि स्वतःचा सूर'],'Share It':['दुनिया को दिखाएँ','जगासमोर आणा'],'First Win':['पहली जीत','पहिला विजय'],'Breakthrough':['सफलता','यश'],'Integration':['समन्वय','एकात्मता'],
+'Illustrative scenario — not a prediction.':['उदाहरण परिदृश्य — भविष्यवाणी नहीं।','उदाहरणात्मक परिस्थिती — भाकीत नाही.'],'Card for':['कार्ड:','कार्ड:'],'milestone':['पड़ाव','टप्पा'],'Simulated day':['अनुमानित दिन','अंदाजित दिवस'],'illustrative scenarios':['उदाहरण परिदृश्य','उदाहरणात्मक परिस्थिती']};
+const tr=s=>{if(S.lang==='en'||s==null)return s;const v=X[s];if(v)return v[S.lang==='hi'?0:1];const m=/^(\d+) days$/.exec(s);return m?m[1]+' '+X.days[S.lang==='hi'?0:1]:s};
+const orig=new WeakMap();
+function fix(tn){const p=tn.parentNode;if(!p||/^(SCRIPT|STYLE|OPTION|TEXTAREA)$/i.test(p.nodeName))return;const cur=tn.nodeValue;if(!cur.trim())return;const o=orig.get(tn),en=o&&cur===o.out?o.en:cur,t=en.trim(),r=tr(t),out=r===t?en:en.replace(t,()=>r);orig.set(tn,{en,out});if(out!==cur)tn.nodeValue=out}
+function walk(root){const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),a=[];let n;while(n=w.nextNode())a.push(n);a.forEach(fix);if(!root.querySelectorAll)return;root.querySelectorAll('[placeholder],[aria-label]').forEach(e=>['placeholder','aria-label'].forEach(k=>{const cur=e.getAttribute(k);if(cur==null)return;const o=(e.__o=e.__o||{})[k],en=o&&cur===o.out?o.en:cur,out=tr(en);e.__o[k]={en,out};if(out!==cur)e.setAttribute(k,out)}))}
+new MutationObserver(ms=>ms.forEach(m=>{m.addedNodes.forEach(n=>n.nodeType===3?fix(n):n.nodeType===1&&walk(n));if(m.type==='characterData')fix(m.target)})).observe(document.body,{childList:true,subtree:true,characterData:true});
+function setLang(l){S.lang=l;document.documentElement.lang=l;try{localStorage.setItem('ft.lang',l)}catch(e){}$('#lang').value=l;walk(document.body);if(S.cur)regen(S.cur.dec)}
+$('#lang').onchange=e=>setLang(e.target.value);
+/* storage */
+const load=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return[]}};
+const store=a=>{try{localStorage.setItem(KEY,JSON.stringify(a));return true}catch(e){toast('Storage unavailable — could not save.');return false}};
+
+/* durations */
+$('#durs').innerHTML=[30,90,180,365].map(d=>`<button type="button" class="chip" role="radio" aria-checked="${d===90}" data-d="${d}">${d} days</button>`).join('');
+$('#durs').onclick=e=>{const b=e.target.closest('[data-d]');if(!b)return;S.dur=+b.dataset.d;[...$('#durs').children].forEach(c=>c.setAttribute('aria-checked',c===b))};
+
+/* run */
+const MSG=['Initializing simulation','Mapping possible timelines','Weighing small decisions','Branching futures'];
+function run(goal,dur,dec='base',keep){
+ $('#load').classList.add('on');let i=0;const m=setInterval(()=>{$('#lmsg').textContent=MSG[++i%MSG.length]},600);$('#lmsg').textContent=MSG[0];
+ $('#explore').scrollIntoView({behavior:rm()?'auto':'smooth'});
+ setTimeout(()=>{clearInterval(m);$('#load').classList.remove('on');
+  S.cur={...gen(goal,dur,dec),id:keep||null,name:null};if(keep){const s=load().find(x=>x.id===keep);if(s)S.cur.name=s.name}
+  S.path=0;S.idx=0;S.anim=true;show()},rm()?200:2400)}
+function show(){const c=S.cur=S.cur||null;$('#empty').hidden=true;$('#tlwrap').hidden=false;
+ $('#tt').textContent=c.name||clean(c.goal).replace(/^./,x=>x.toUpperCase());$('#ts').textContent=`${c.cat} · ${c.dur} ${tr('days')} · ${tr('illustrative scenarios')}`;
+ drawTL();decUI();upd();card()}
+function regen(dec){const o=S.cur;S.cur={...gen(o.goal,o.dur,dec),id:o.id,name:o.name};S.anim=false;drawTL();decUI();upd();card()}
+
+/* svg */
+function pts(pi){const L=LANES[pi],ms=S.cur.paths[pi].ms;return ms.map((m,i)=>[230+i*180,L.y-(m.prog-50)*.45])}
+function pathD(pi){const p=pts(pi),s=[70,260];let d=`M${s[0]} ${s[1]}C${s[0]+110} ${s[1]} ${p[0][0]-100} ${p[0][1]} ${p[0][0]} ${p[0][1]}`;
+ for(let i=1;i<p.length;i++){d+=`C${p[i-1][0]+80} ${p[i-1][1]} ${p[i][0]-80} ${p[i][1]} ${p[i][0]} ${p[i][1]}`}return d}
+function drawTL(){const c=S.cur;let h=`<defs><radialGradient id="g"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#8B5CF6"/></radialGradient></defs>`;
+ h+=`<g class="${S.anim?'anim':''}" id="root"><g class="nd" style="animation-delay:.1s"><circle cx="70" cy="260" r="24" fill="none" stroke="#fff" stroke-opacity=".25"/><circle class="halo" cx="70" cy="260" r="10" fill="#22D3EE"/><circle cx="70" cy="260" r="10" fill="url(#g)"/><text x="70" y="302">Today</text></g>`;
+ LANES.forEach((L,pi)=>{const p=pts(pi),del=.5+pi*.15;
+  h+=`<g class="pg" data-p="${pi}"><path class="br" pathLength="1" d="${pathD(pi)}" stroke="${L.c}" style="color:${L.c};animation-delay:${del}s"/>`;
+  h+=`<text class="lane" x="${p[0][0]-60}" y="${p[0][1]-34}" fill="${L.c}" text-anchor="start" tabindex="0" role="button" data-p="${pi}" aria-label="Select ${L.n}">${L.n}</text>`;
+  c.paths[pi].ms.forEach((m,i)=>{const[x,y]=p[i];h+=`<g class="nd" data-p="${pi}" data-i="${i}" tabindex="0" role="button" aria-label="${L.n}, day ${m.day}: ${esc(m.title)}" style="animation-delay:${del+.5+i*.28}s;color:${L.c}">
+  <circle class="halo" cx="${x}" cy="${y}" r="9" fill="${L.c}" style="animation-delay:${i*.4}s"/><circle class="c" cx="${x}" cy="${y}" r="8" fill="#070812" stroke="${L.c}" stroke-width="2.5"/>
+  <text x="${x}" y="${y+28}">${tr('Day')} ${m.day}</text></g>`});h+='</g>'});
+ h+=`<circle id="cur" r="19" fill="none" stroke="#fff" stroke-width="1.5" style="transition:cx .6s,cy .6s;filter:drop-shadow(0 0 8px #fff)"/></g>`;
+ $('#tl').innerHTML=h;S.anim=false}
+$('#tl').addEventListener('click',e=>{const n=e.target.closest('.nd[data-p]'),l=e.target.closest('.lane');if(n)pick(+n.dataset.p,+n.dataset.i);else if(l)pick(+l.dataset.p,S.idx)});
+$('#tl').addEventListener('keydown',e=>{if(e.key!=='Enter'&&e.key!==' ')return;const n=e.target.closest('.nd[data-p]'),l=e.target.closest('.lane');if(n||l){e.preventDefault();n?pick(+n.dataset.p,+n.dataset.i):pick(+l.dataset.p,S.idx)}});
+function pick(p,i){S.path=p;S.idx=i;upd();card()}
+
+/* panel */
+function upd(){const c=S.cur,L=LANES[S.path],m=c.paths[S.path].ms[S.idx],r=$('#root');
+ r.classList.add('dim');r.querySelectorAll('.pg').forEach(g=>g.classList.toggle('sel',+g.dataset.p===S.path));
+ r.querySelectorAll('.nd[data-p]').forEach(n=>{const on=+n.dataset.p===S.path&&+n.dataset.i===S.idx;n.classList.toggle('on',on);n.closest('.pg').classList.contains('sel')&&0});
+ r.querySelectorAll('.pg').forEach(g=>g.querySelectorAll('.nd').forEach(n=>n.classList.toggle('on',+g.dataset.p===S.path&&+n.dataset.i===S.idx)));
+ const[x,y]=pts(S.path)[S.idx];const cu=$('#cur');cu.setAttribute('cx',x);cu.setAttribute('cy',y);
+ $('#sl').value=S.idx;$('#sl').setAttribute('aria-valuetext',`Day ${m.day}: ${m.title}`);$('#slv').textContent=`${tr('Day')} ${m.day} · ${m.title}`;
+ $('#tk').innerHTML=c.paths[S.path].ms.map(q=>`<span>${tr('Day')} ${q.day}</span>`).join('');
+ $('#panel').innerHTML=`<div class="fade" key="${S.path}${S.idx}"><div class="tag" style="color:${L.c}">${L.n}</div><h4>${esc(m.title)}</h4><div style="color:var(--mu);font-size:13px">${tr('Simulated day')} ${m.day}/${c.dur} · ${tr('milestone')} ${S.idx+1}/5</div>
+ <div class="bar" role="progressbar" aria-valuenow="${m.prog}" aria-valuemin="0" aria-valuemax="100" aria-label="Simulated progress"><i style="width:${m.prog}%;background:${L.c}"></i></div>
+ <dl style="margin:0"><dt>Possible outcome</dt><p>${esc(m.desc)}</p><dt>Challenge</dt><p>${esc(m.ch)}</p><dt>Recommended action</dt><p>${esc(m.ac)}</p><dt>Decision effect</dt><p>${esc(D[c.dec].note)}</p></dl></div>`}
+$('#sl').oninput=e=>{S.idx=+e.target.value;upd();card()};
+
+/* decisions */
+function decUI(){$('#dec').innerHTML=Object.entries(D).map(([k,d])=>`<button data-k="${k}" aria-pressed="${S.cur.dec===k}"><b>${d.n}</b><span>${d.s}</span></button>`).join('')}
+$('#dec').onclick=e=>{const b=e.target.closest('[data-k]');if(b&&b.dataset.k!==S.cur.dec){regen(b.dataset.k);toast(tr('Scenarios updated')+': '+tr(D[b.dataset.k].n))}};
+
+/* saved */
+function renderSaved(){const a=load(),el=$('#sv');
+ if(!a.length){el.innerHTML='<div class="glass card" style="grid-column:1/-1;text-align:center;color:var(--mu)">Nothing saved yet. Generate a timeline and press “Save timeline”.</div>';return}
+ el.innerHTML=a.map(s=>`<div class="glass card" data-id="${s.id}">${S.editing===s.id?`<input value="${esc(s.name)}" maxlength="60" aria-label="Timeline name" data-r>`:`<h5>${esc(s.name)}</h5>`}
+ <small>${s.dur} days · ${esc(D[s.dec]?D[s.dec].n:'')} · ${new Date(s.at).toLocaleDateString()}</small>
+ <div class="cta" style="margin-top:6px"><button class="btn sm p" data-a="open">Open</button><button class="btn sm" data-a="${S.editing===s.id?'ok':'ren'}">${S.editing===s.id?'Save name':'Rename'}</button><button class="btn sm" data-a="del" aria-label="Delete ${esc(s.name)}">Delete</button></div></div>`).join('');
+ const i=el.querySelector('[data-r]');if(i){i.focus();i.onkeydown=e=>{if(e.key==='Enter')el.querySelector('[data-a=ok]').click()}}}
+$('#sv').onclick=e=>{const b=e.target.closest('[data-a]');if(!b)return;const id=b.closest('.card').dataset.id,a=load(),s=a.find(x=>x.id===id);if(!s)return;
+ if(b.dataset.a==='del'){store(a.filter(x=>x.id!==id));toast('Timeline deleted')}
+ else if(b.dataset.a==='ren'){S.editing=id}
+ else if(b.dataset.a==='ok'){const v=b.closest('.card').querySelector('[data-r]').value.trim();if(v){s.name=v.slice(0,60);store(a);if(S.cur&&S.cur.id===id){S.cur.name=s.name;$('#tt').textContent=s.name}}S.editing=null}
+ else{S.dur=s.dur;[...$('#durs').children].forEach(c=>c.setAttribute('aria-checked',+c.dataset.d===s.dur));$('#goal').value=s.goal;run(s.goal,s.dur,s.dec,s.id)}
+ renderSaved()};
+$('#save').onclick=()=>{const c=S.cur,a=load();const base=clean(c.goal).replace(/^./,x=>x.toUpperCase()).slice(0,50);
+ if(c.id&&a.find(x=>x.id===c.id)){const s=a.find(x=>x.id===c.id);s.dec=c.dec;s.at=Date.now();store(a)&&toast('Timeline updated')}
+ else{const id='t'+Date.now();c.id=id;a.unshift({id,name:c.name||base,goal:c.goal,dur:c.dur,dec:c.dec,at:Date.now()});store(a)&&toast('Timeline saved')}renderSaved()};
+
+/* result card */
+function wrap(x,t,px,py,w,lh,max){const ws=t.split(' ');let l='',n=0;for(const w2 of ws){const tt=l+w2+' ';if(x.measureText(tt).width>w&&l){x.fillText(l.trim(),px,py+n*lh);l=w2+' ';if(++n>=max)return py+n*lh}else l=tt}x.fillText(l.trim(),px,py+n*lh);return py+(n+1)*lh}
+function card(){const cv=$('#card'),x=cv.getContext('2d');if(!S.cur){return}const c=S.cur,L=LANES[S.path],P=c.paths[S.path];
+ let g=x.createLinearGradient(0,0,1080,1080);g.addColorStop(0,'#0c0a24');g.addColorStop(1,'#070812');x.fillStyle=g;x.fillRect(0,0,1080,1080);
+ let r=x.createRadialGradient(900,100,0,900,100,600);r.addColorStop(0,'rgba(139,92,246,.35)');r.addColorStop(1,'transparent');x.fillStyle=r;x.fillRect(0,0,1080,1080);
+ x.strokeStyle='rgba(255,255,255,.14)';x.lineWidth=2;x.strokeRect(40,40,1000,1000);
+ x.fillStyle='#22D3EE';x.font='500 26px "Space Grotesk",sans-serif';x.fillText('F U T U R E T R A C E',90,120);
+ x.fillStyle='#8b8fb0';x.font='300 28px "Space Grotesk",sans-serif';x.fillText(tr('GOAL')+' · '+c.dur+' '+tr('DAYS'),90,200);
+ x.fillStyle='#e8e9f5';x.font='300 62px "Space Grotesk",sans-serif';let y=wrap(x,clean(c.goal).replace(/^./,q=>q.toUpperCase()),90,275,900,76,3);
+ x.fillStyle=L.c;x.font='500 34px "Space Grotesk",sans-serif';x.fillText(L.n,90,y+40);
+ const ys=y+110,x0=130,x1=950;x.strokeStyle=L.c;x.lineWidth=4;x.shadowColor=L.c;x.shadowBlur=18;x.beginPath();x.moveTo(x0,ys);x.lineTo(x1,ys);x.stroke();x.shadowBlur=0;
+ P.ms.forEach((m,i)=>{const px=x0+i*(x1-x0)/4;x.fillStyle='#070812';x.strokeStyle=L.c;x.lineWidth=4;x.beginPath();x.arc(px,ys,i===S.idx?16:11,0,7);x.fill();x.stroke();
+  x.fillStyle=i===S.idx?'#fff':'#8b8fb0';x.font='400 22px "Space Grotesk",sans-serif';x.textAlign='center';x.fillText(tr('Day')+' '+m.day,px,ys+48);x.textAlign='left'});
+ x.fillStyle='#c4c7e0';x.font='400 30px "Space Grotesk",sans-serif';let yy=ys+120;P.ms.filter((_,i)=>i%2===0||i===4).slice(0,4).forEach(m=>{x.fillStyle=L.c;x.fillText('●',90,yy);x.fillStyle='#e8e9f5';x.fillText(m.title,130,yy);yy+=48});
+ x.fillStyle='#8b8fb0';x.font='400 22px "Space Grotesk",sans-serif';x.fillText(tr('Illustrative scenario — not a prediction.'),90,990);
+ $('#shnote').textContent=`${tr('Card for')} “${clean(c.goal)}” — ${L.n}.`}
+const blob=()=>new Promise(r=>$('#card').toBlob(r,'image/png'));
+$('#dl').onclick=async()=>{if(!S.cur)return toast('Generate a timeline first');const b=await blob(),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='futuretrace-result.png';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000)};
+$('#sh').onclick=async()=>{if(!S.cur)return toast('Generate a timeline first');const t=`My FUTURETRACE scenario: ${clean(S.cur.goal)} — ${LANES[S.path].n}`;
+ try{const b=await blob(),f=new File([b],'futuretrace.png',{type:'image/png'});if(navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share({files:[f],text:t});else if(navigator.share)await navigator.share({text:t});else{await navigator.clipboard.writeText(t);toast('Copied to clipboard')}}catch(e){if(e.name!=='AbortError')toast('Sharing unavailable — use Download.')}};
+$('#toShare').onclick=()=>$('#share').scrollIntoView({behavior:rm()?'auto':'smooth'});
+
+/* form */
+$('#f').onsubmit=e=>{e.preventDefault();const v=$('#goal').value,m=validate(v);$('#err').textContent=m;$('#goal').setAttribute('aria-invalid',!!m);if(m)return $('#goal').focus();run(v.trim(),S.dur,'base')};
+$('#goal').oninput=()=>{$('#err').textContent=''};
+$('#ex').onclick=()=>{const v='What if I learn web development in 365 days?';$('#goal').value=v;S.dur=365;[...$('#durs').children].forEach(c=>c.setAttribute('aria-checked',+c.dataset.d===365));$('#err').textContent='';run(v,365,'base')};
+
+/* settings */
+$('#openSet').onclick=()=>$('#set').showModal();$('#cl').onclick=()=>$('#set').close();
+$('#sRM').onchange=e=>{S.rm=e.target.checked;document.body.classList.toggle('rm',S.rm);fxInit()};$('#sPT').onchange=e=>{S.pt=e.target.checked;fxInit()};
+$('#clr').onclick=()=>{if(store([])){renderSaved();toast('All saved timelines cleared')}};
+
+/* particles */
+const cv=$('#fx'),cx=cv.getContext('2d');let ps=[],raf;
+function fxInit(){cancelAnimationFrame(raf);cv.width=innerWidth;cv.height=innerHeight;cx.clearRect(0,0,cv.width,cv.height);if(!S.pt)return;
+ ps=Array.from({length:Math.min(70,Math.floor(innerWidth/18))},()=>({x:Math.random()*cv.width,y:Math.random()*cv.height,r:Math.random()*1.5+.4,v:Math.random()*.25+.05,c:['#8B5CF6','#22D3EE','#34D399'][Math.random()*3|0],a:Math.random()*.5+.2}));
+ const draw=()=>{cx.clearRect(0,0,cv.width,cv.height);ps.forEach(p=>{if(!rm())p.y-=p.v,p.x+=Math.sin(p.y/80)*.15;if(p.y<-5)p.y=cv.height+5;cx.globalAlpha=p.a;cx.fillStyle=p.c;cx.shadowColor=p.c;cx.shadowBlur=8;cx.beginPath();cx.arc(p.x,p.y,p.r,0,7);cx.fill()});if(!rm())raf=requestAnimationFrame(draw)};draw()}
+addEventListener('resize',fxInit);fxInit();renderSaved();
+try{const sl=localStorage.getItem('ft.lang');if(sl==='hi'||sl==='mr')setLang(sl)}catch(e){}
+</script>
+</body>
+</html>
